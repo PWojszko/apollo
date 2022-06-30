@@ -1,6 +1,3 @@
-import logo from "./logo.svg";
-import "./App.css";
-
 //Apollo
 import { useQuery, gql } from "@apollo/client";
 
@@ -14,63 +11,70 @@ import {
   Card,
   CardContent,
   CardMedia,
+  CardActions,
   Grid,
 } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 
-const theme = createTheme();
+//React Router
+import { Routes, Route, Link } from "react-router-dom";
 
-const App = () => {
-  const LAUNCHES = gql`
-    query GetLaunches {
-      launches {
-        mission_name
-        mission_id
+//Components
+import Launches from "./components/Launches";
+import Launch from "./components/Launch";
+
+const theme = createTheme({
+  palette: {
+    mode: "dark",
+    primary: {
+      main: "#e93131",
+    },
+    secondary: {
+      main: "#5e17e6",
+    },
+  },
+});
+
+const LAUNCHES = gql`
+  query GetLaunches {
+    launches {
+      mission_name
+      mission_id
+      rocket {
+        rocket_name
         rocket {
-          rocket_name
-          rocket {
-            company
-            name
-            mass {
-              kg
-            }
+          company
+          name
+          mass {
+            kg
           }
         }
-        launch_site {
-          site_name
-        }
-        launch_date_local
       }
+      launch_site {
+        site_name
+      }
+      launch_date_local
     }
-  `;
+  }
+`;
 
+const App = () => {
   const { loading, error, data } = useQuery(LAUNCHES);
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error :(</p>;
-
-  const launchesArray = data.launches;
-
-  const launchesMap = launchesArray.map((element) => (
-    <Grid item key={element.mission_name} xs={12} sm={6} md={4}>
-      <Card>
-        <CardContent>
-          <Typography>{element.mission_name}</Typography>
-          <Typography>{element.launch_date_local}</Typography>
-        </CardContent>
-      </Card>
-    </Grid>
-  ));
-
   return (
     <ThemeProvider theme={theme}>
-      <main>
-        <Container maxWidth="lg" sx={{ py: 8 }}>
-          <Grid container spacing={4}>
-            {launchesMap}
-          </Grid>
-        </Container>
-      </main>
+      <Link to="/">
+        <Button variant="contained">Home</Button>
+      </Link>
+      <Routes>
+        <Route
+          path="/"
+          element={<Launches loading={loading} error={error} data={data} />}
+        />
+        <Route path="/launches/:id" element={<Launch />} />
+      </Routes>
     </ThemeProvider>
   );
 };
