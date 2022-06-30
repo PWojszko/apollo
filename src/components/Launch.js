@@ -15,42 +15,29 @@ import {
   Grid,
 } from "@mui/material";
 
-const Launch = () => {
-  const LAUNCHES = gql`
-    query GetLaunches {
-      launches {
-        mission_name
-        mission_id
-        rocket {
-          rocket_name
-          rocket {
-            company
-            name
-            mass {
-              kg
-            }
-          }
-        }
-        launch_site {
-          site_name
-        }
-        launch_date_local
-      }
-    }
-  `;
+//React Router
+import { useParams } from "react-router-dom";
 
-  const { loading, error, data } = useQuery(LAUNCHES);
-
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error :(</p>;
-
+const Launch = ({ loading, error, data }) => {
+  const params = useParams();
   const launchesArray = data.launches;
 
-  return (
-    <Container launchesArray={launchesArray} maxWidth="lg" sx={{ py: 8 }}>
-      loremas;fknsduhifghsdfjh fhsdf jhdsgf jdskhfgsdfj sdfjhbs jhfbj sd
-    </Container>
-  );
+  const searchedLaunch = launchesArray.map((element) => {
+    if (element.mission_name === params.launchId) {
+      return (
+        <Container maxWidth="lg" key={element.mission_name}>
+          <Typography variant="h1" color="initial">
+            {element.mission_name}
+          </Typography>
+          <Typography variant="h2" color="initial">
+            {element.launch_date_local}
+          </Typography>
+        </Container>
+      );
+    }
+  });
+
+  return searchedLaunch;
 };
 
 export default Launch;

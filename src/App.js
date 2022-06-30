@@ -73,7 +73,10 @@ const App = () => {
           path="/"
           element={<Launches loading={loading} error={error} data={data} />}
         />
-        <Route path="/launches/:id" element={<Launch />} />
+        <Route
+          path="/launches/:launchId"
+          element={<Launch loading={loading} error={error} data={data} />}
+        />
       </Routes>
     </ThemeProvider>
   );
