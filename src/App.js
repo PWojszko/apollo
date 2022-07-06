@@ -61,7 +61,7 @@ const LAUNCHES = gql`
 const App = () => {
   const { loading, error, data } = useQuery(LAUNCHES);
 
-  if (loading) return <p>Loading...</p>;
+  // if (loading) return <p>Loading...</p>;
   if (error) return <p>Error :(</p>;
   return (
     <ThemeProvider theme={theme}>
